@@ -8,9 +8,11 @@ Streamlit Dashbaord returning technical indicators for a given ticker (yfinance/
 - [ ] Add user inputs
   - [X] Buying Price & Plotly Shape
     - [ ] Fix number_input 
-  - [ ] Portfolio Size
-  - [ ] T Price
+  - [X] Portfolio Size
+  - [X] T Price
   - [ ] Add Indicator(s)
+- [ ] Add means
+- [ ] Dynamically generate annotations
 - [ ] Add technical indicators
 - [ ] Identify how to create pages with streamlit 
 - [ ] Improve layout integration between streamlit and plotly
