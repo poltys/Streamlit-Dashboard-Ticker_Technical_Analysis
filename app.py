@@ -69,9 +69,7 @@ if file_buffer is not None:
      st.dataframe(file)
      weighted_rate = (file['price']*file['rate']).sum() / file['price'].sum()
      st.markdown(f'{symbol} portfolio price: {weighted_rate}')
-
-if weighted_rate is not None:
-    buying_price = weighted_rate
+     buying_price = weighted_rate
 
 
 st.dataframe(data.tail(1))
