@@ -117,7 +117,6 @@ fig.add_shape(
          ),
          visible = True,
 )
-
 for column in df_trends.columns.to_list():
     fig.add_trace(
     go.Scatter(x = df_trends.index,y = df_trends[column],name = column,))
