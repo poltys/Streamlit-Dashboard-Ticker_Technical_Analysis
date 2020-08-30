@@ -10,6 +10,7 @@ Streamlit Dashbaord returning technical indicators for a given ticker (yfinance/
     - [ ] Fix number_input 
   - [ ] Portfolio Size
   - [ ] T Price
+  - [ ] Add Indicator(s)
 - [ ] Add technical indicators
 - [ ] Identify how to create pages with streamlit 
 - [ ] Improve layout integration between streamlit and plotly
