@@ -24,9 +24,11 @@ def user_input_features():
     ticker = st.sidebar.text_input("Ticker", 'XRP-EUR')
     start_date = st.sidebar.text_input("Start Date", '2019-01-01')
     end_date = st.sidebar.text_input("End Date", f'{today}')
-    return ticker, start_date, end_date
+    buying_price = st.sidebar.number_input("Buying Price", value=0.2000, step=0.0001)
+    balance = st.sidebar.number_input("Balance", value=0.0, step=0.0001)
+    return ticker, start_date, end_date, buying_price, balance
 
-symbol, start, end = user_input_features()
+symbol, start, end, buying_price, balance = user_input_features()
 
 start = pd.to_datetime(start)
 end = pd.to_datetime(end)
@@ -39,11 +41,19 @@ df = ta.add_all_ta_features(df, "open", "high", "low", "close", "volume", fillna
 df_trends = df[['close','trend_sma_fast','trend_sma_slow','trend_ema_fast','trend_ema_slow',]]
 df_momentum = df[['momentum_rsi', 'momentum_roc', 'momentum_tsi', 'momentum_uo', 'momentum_stoch', 'momentum_stoch_signal', 'momentum_wr', 'momentum_ao', 'momentum_kama']]
 
+# Price
+daily_price = data.close.iloc[-1]
+portfolio = daily_price * balance
+
 
 st.title(f"Streamlit and {symbol} :euro:")
 
 st.header("DF last rows")
 st.dataframe(data.tail())
+st.header("DF today's value")
+st.markdown(f'Daily {symbol} price: {daily_price}')
+st.markdown(f'{symbol} price per quantity: {portfolio}')
+st.dataframe(data.tail(1))
 st.code("""
 time = pd.to_datetime('now')
 today = datetime.date.today()
@@ -70,6 +80,22 @@ fig.add_trace(go.Candlestick(x=df.index,
                              close=df.close,
                              visible=True,
                              name='Candlestick',))
+
+fig.add_shape(
+     # Line Horizontal
+         type="line",
+         x0=start,
+         y0=buying_price,
+         x1=end,
+         y1=buying_price,
+         line=dict(
+             color="black",
+             width=1.5,
+             dash="dash",
+         ),
+         visible = True,
+)
+
 for column in df_trends.columns.to_list():
     fig.add_trace(
     go.Scatter(x = df_trends.index,y = df_trends[column],name = column,))
