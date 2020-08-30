@@ -27,8 +27,8 @@ def user_input_features():
     start_date = st.sidebar.text_input("Start Date", '2019-01-01')
     end_date = st.sidebar.text_input("End Date", f'{today}')
     buying_price = st.sidebar.number_input("Buying Price", value=0.2000, step=0.0001)
-    balance = st.sidebar.number_input("Balance", value=0.0, step=0.0001)
-    file_buffer = st.sidebar.file_uploader("Choose a CSV file\n 2 columns are expected 'rate' and 'price'", type='csv')
+    balance = st.sidebar.number_input("Quantity", value=0.0, step=0.0001)
+    file_buffer = st.sidebar.file_uploader("Choose a .csv or .xlxs file\n 2 columns are expected 'rate' and 'price'", type=['xlsx','csv'])
     return ticker, start_date, end_date, buying_price, balance, file_buffer
 
 symbol, start, end, buying_price, balance, file_buffer = user_input_features()
@@ -44,9 +44,12 @@ df = ta.add_all_ta_features(df, "open", "high", "low", "close", "volume", fillna
 df_trends = df[['close','trend_sma_fast','trend_sma_slow','trend_ema_fast','trend_ema_slow',]]
 df_momentum = df[['momentum_rsi', 'momentum_roc', 'momentum_tsi', 'momentum_uo', 'momentum_stoch', 'momentum_stoch_signal', 'momentum_wr', 'momentum_ao', 'momentum_kama']]
 
+
+
 # Price
 daily_price = data.close.iloc[-1]
 portfolio = daily_price * balance
+
 
 
 st.title(f"Streamlit and {symbol} :euro:")
@@ -54,8 +57,23 @@ st.title(f"Streamlit and {symbol} :euro:")
 st.header("DF last rows")
 st.dataframe(data.tail())
 st.header("DF today's value")
+
 st.markdown(f'Daily {symbol} price: {daily_price}')
+
+
 st.markdown(f'{symbol} price per quantity: {portfolio}')
+
+if file_buffer is not None:
+     file = pd.read_excel(file_buffer)
+     file = pd.DataFrame(file)
+     st.dataframe(file)
+     weighted_rate = (file['price']*file['rate']).sum() / file['price'].sum()
+     st.markdown(f'{symbol} portfolio price: {weighted_rate}')
+
+if weighted_rate is not None:
+    buying_price = weighted_rate
+
+
 st.dataframe(data.tail(1))
 st.code("""
 time = pd.to_datetime('now')
@@ -71,10 +89,6 @@ symbol, start, end = user_input_features()
 data = yf.download(symbol,start,end)
 """, language="python")
 
-# Uploaded file
-if file_buffer is not None:
-     file = pd.read_csv(file_buffer)
-     st.write(file)
 
 
 st.header(f"Candlestick for {symbol}")
