@@ -9,8 +9,10 @@ import plotly.graph_objects as go
 import streamlit as st
 from datetime import date
 import datetime
+import io
 yf.pdr_override()
 
+st.set_option('deprecation.showfileUploaderEncoding', False)
 
 st.write("""
 # Technical Analysis Dashboard for any stock using **yfinance** and **ta**
@@ -26,9 +28,10 @@ def user_input_features():
     end_date = st.sidebar.text_input("End Date", f'{today}')
     buying_price = st.sidebar.number_input("Buying Price", value=0.2000, step=0.0001)
     balance = st.sidebar.number_input("Balance", value=0.0, step=0.0001)
-    return ticker, start_date, end_date, buying_price, balance
+    file_buffer = st.sidebar.file_uploader("Choose a CSV file\n 2 columns are expected 'rate' and 'price'", type='csv')
+    return ticker, start_date, end_date, buying_price, balance, file_buffer
 
-symbol, start, end, buying_price, balance = user_input_features()
+symbol, start, end, buying_price, balance, file_buffer = user_input_features()
 
 start = pd.to_datetime(start)
 end = pd.to_datetime(end)
@@ -67,6 +70,11 @@ symbol, start, end = user_input_features()
 # Read data
 data = yf.download(symbol,start,end)
 """, language="python")
+
+# Uploaded file
+if file_buffer is not None:
+     file = pd.read_csv(file_buffer)
+     st.write(file)
 
 
 st.header(f"Candlestick for {symbol}")
