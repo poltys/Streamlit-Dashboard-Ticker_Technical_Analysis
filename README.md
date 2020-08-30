@@ -10,7 +10,7 @@ Streamlit Dashbaord returning technical indicators for a given ticker (yfinance/
     - [ ] Fix number_input 
   - [X] Create button to upload portfio detail and calcul global buying price / weighted av.
     - [ ] Add python logic to calculate values
-    - [ ] Create a templated csv to download [awesome-streamlit: work around](#https://discuss.streamlit.io/t/file-download-workaround-added-to-awesome-streamlit-org/1244)
+    - [ ] Create a templated csv to download [work-around](https://discuss.streamlit.io/t/file-download-workaround-added-to-awesome-streamlit-org/1244)
   - [X] Portfolio Size
   - [X] T Price
   - [ ] Add Indicator(s)
