@@ -101,6 +101,16 @@ fig.add_trace(go.Candlestick(x=df.index,
                              visible=True,
                              name='Candlestick',))
 
+if file_buffer is not None:
+    fig.add_trace(
+    go.Indicator(
+        mode = "number+delta",
+        value = daily_price,
+        delta = {"reference": weighted_rate, 'relative':True},
+        #title = {"text": "<span style='font-size:0.9em'>Daily Portfolio Performance</span>"},
+        domain = {'y': [0.8, 1], 'x': [0.25, 0.75]},
+        visible = True))
+
 fig.add_shape(
      # Line Horizontal
          type="line",
